@@ -3,17 +3,9 @@ import { MonthItem, MonthTitle } from "./monthTitle"
 import { getFirstDayOfYear } from "./util"
 
 type CanvasGraphOptions = {
-  grid: {
-    size: number
-    space: number
-    defaultColor: string
-    primaryColor: string
-  },
-  text: {
-    color: string
-    font: string
-    height: number
-  }
+  size: number
+  space: number
+  titleHeight: number
 }
 
 export class CalendarGraph {
@@ -32,17 +24,17 @@ export class CalendarGraph {
   init() {
     this.monthTitleData = new MonthTitle({
       offsetCellCount: this.offsetCellCount,
-      size: this.options.grid.size,
-      space: this.options.grid.space,
-      ...this.options.text
+      size: this.options.size,
+      space: this.options.space,
     }).monthTitleData
     let grid = new Grid(this.offsetCellCount, {
-      offsetY: this.options.text.height,
-      ...this.options.grid
+      offsetY: this.options.titleHeight,
+      size: this.options.size,
+      space: this.options.space,
     })
     this.gridData = grid.gridData
     this.calendarWidth = grid.width
-    this.calendarHeight = grid.height + this.options.text.height
+    this.calendarHeight = grid.height + this.options.titleHeight
   }
   // 单元格从左到右，从上到下进行偏移, 确保每年的第一天和星期几对应
   private getOffsetCellCount() {

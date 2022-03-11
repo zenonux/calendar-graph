@@ -9,8 +9,6 @@ type GridOptions = {
     offsetY: number
     size: number
     space: number
-    defaultColor: string
-    primaryColor: string
 }
 
 export type GridItem = {

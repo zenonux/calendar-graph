@@ -6,12 +6,9 @@ export type MonthItem = {
     y: number
 }
 type MonthOptions = {
-    height: number
     size: number
     offsetCellCount: number
     space: number
-    font: string
-    color: string
 }
 export class MonthTitle {
     monthTitleData: MonthItem[]

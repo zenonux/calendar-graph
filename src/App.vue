@@ -25,17 +25,9 @@
 import { CalendarGraph } from '../lib'
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 const calendarGraph = new CalendarGraph({
-  grid: {
-    size: 12,
-    space: 2,
-    defaultColor: '#ccc',
-    primaryColor: '#2196f3',
-  },
-  text: {
-    color: '#959494',
-    height: 24,
-    font: '14px sans-serif',
-  },
+  titleHeight: 24,
+  size: 12,
+  space: 2,
 });
 console.log(calendarGraph)
 let { monthTitleData, gridData, calendarWidth, calendarHeight } = calendarGraph

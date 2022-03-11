@@ -20,7 +20,7 @@ export class MonthTitle {
             let column = this.getMonthColumn(key, options.offsetCellCount);
             return {
                 title: key + 1 + '月',
-                x: column * options.size + (column - 1 > 0 ? column - 1 : 0) * options.space,
+                x: column * options.size + column * options.space,
                 y: 0,
             }
         })

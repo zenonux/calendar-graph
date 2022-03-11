@@ -63,7 +63,7 @@ export class Grid {
 
     static mergeData(gridData: GridItem[], data: DataItem[]) {
         const dataTmp = data.reduce((target, v) => {
-            let day = getDayOfYear(new Date(v.date))
+            let day = getDayOfYear(new Date(v.date)) - 1
             target[day] = v;
             return target;
         }, {});

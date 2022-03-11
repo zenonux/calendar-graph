@@ -35,44 +35,69 @@ function getDayOfYear(date = new Date()) {
   const differenceInDays = differenceInMilliseconds / 1e3 / 60 / 60 / 24;
   return differenceInDays;
 }
-function getHexOpacityColor(color = "#000", opacity = 0.5) {
-  opacity = Math.max(opacity, 0);
-  opacity = Math.min(opacity, 1);
-  color = color.replace(/\#/g, "").toUpperCase();
-  if (color.length === 3) {
-    let arr = color.split("");
-    color = "";
-    for (let i = 0; i < arr.length; i++) {
-      color += arr[i] + arr[i];
+class Grid {
+  constructor(offsetCellCount, options) {
+    __publicField(this, "width");
+    __publicField(this, "height");
+    __publicField(this, "gridData");
+    this.offsetCellCount = offsetCellCount;
+    this.options = options;
+    this.init();
+  }
+  init() {
+    let totalDays = isLeapYear() ? 366 : 365;
+    this.gridData = new Array(totalDays).fill(null).map((_val, index) => {
+      return this.getCellPostionByDay(index + 1);
+    });
+    this.setGridWidthHeight(totalDays);
+  }
+  setGridWidthHeight(days) {
+    let { size, space } = this.options;
+    let column = Math.ceil((this.offsetCellCount + days) / 7);
+    this.width = column * size + (column - 1) * space;
+    this.height = 7 * size + 6 * space;
+  }
+  getCellPostionByDay(day) {
+    let { size, space } = this.options;
+    let [row, column] = this.getCellRowColumnByDay(day);
+    let x = column * size + column * space;
+    let y = this.options.offsetY + row * size + row * space;
+    return { x, y };
+  }
+  getCellRowColumnByDay(day) {
+    let { offsetCellCount } = this;
+    let column = Math.ceil((day + offsetCellCount) / 7);
+    let row = 7 - (7 * column - day - offsetCellCount);
+    column = column - 1 > 0 ? column - 1 : 0;
+    row = row - 1 > 0 ? row - 1 : 0;
+    return [row, column];
+  }
+  static mergeData(gridData, data) {
+    const dataTmp = data.reduce((target, v) => {
+      let day = getDayOfYear(new Date(v.date));
+      target[day] = v;
+      return target;
+    }, {});
+    for (let i = 0; i < gridData.length; i++) {
+      gridData[i] = __spreadValues(__spreadValues({}, gridData[i]), dataTmp[i]);
     }
+    return gridData;
   }
-  let num = Math.round(255 * opacity);
-  let str = "";
-  let arrHex = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
-  while (num > 0) {
-    let mod = num % 16;
-    num = (num - mod) / 16;
-    str = arrHex[mod] + str;
-  }
-  if (str.length == 1)
-    str = "0" + str;
-  if (str.length == 0)
-    str = "00";
-  return `#${color + str}`;
 }
 class MonthTitle {
-  constructor(context, options) {
-    __publicField(this, "data");
-    this.init(context, options);
+  constructor(options) {
+    __publicField(this, "monthTitleData");
+    this.init(options);
   }
-  init(context, options) {
-    let data = new Array(12).fill(null).map((_val, key) => {
+  init(options) {
+    this.monthTitleData = new Array(12).fill(null).map((_val, key) => {
+      let column = this.getMonthColumn(key, options.offsetCellCount);
       return {
         title: key + 1 + "\u6708",
-        column: this.getMonthColumn(key, options.offsetCellCount)
+        x: column * options.size + (column - 1 > 0 ? column - 1 : 0) * options.space,
+        y: 0
       };
     });
-    this.render(context, data, options);
   }
   getMonthColumn(month, offsetCellCount) {
     let firstDay = new Date(new Date().getFullYear(), month, 1 + offsetCellCount);
@@ -84,99 +109,31 @@ class MonthTitle {
     }
     return column + 1;
   }
-  render(context, data, opts) {
-    let arr = data.map((val, key) => {
-      return {
-        title: val.title,
-        x: val.column * opts.size + (val.column - 1 > 0 ? val.column - 1 : 0) * opts.space,
-        y: opts.height / 2
-      };
-    });
-    arr.forEach((val) => {
-      this.drawText(context, val.title, val.x, val.y, opts.font, opts.color);
-    });
-  }
-  drawText(context, text, x, y, font, color) {
-    context.font = font;
-    context.fillStyle = color;
-    context.textBaseline = "middle";
-    context.fillText(text, x, y);
-  }
 }
 class CalendarGraph {
-  constructor(canvas, options) {
+  constructor(options) {
     __publicField(this, "offsetCellCount", 0);
-    __publicField(this, "context");
     __publicField(this, "options");
-    __publicField(this, "gridWidth");
-    __publicField(this, "gridHeight");
+    __publicField(this, "calendarWidth");
+    __publicField(this, "calendarHeight");
+    __publicField(this, "monthTitleData");
+    __publicField(this, "gridData");
     this.offsetCellCount = this.getOffsetCellCount();
-    this.context = canvas.getContext("2d");
     this.options = options;
-    this.draw();
+    this.init();
   }
-  draw() {
-    new MonthTitle(this.context, __spreadValues({
-      height: this.options.text.height,
-      size: this.options.grid.size,
+  init() {
+    this.monthTitleData = new MonthTitle(__spreadValues({
       offsetCellCount: this.offsetCellCount,
+      size: this.options.grid.size,
       space: this.options.grid.space
-    }, this.options.text));
-    this.drawGrid();
-  }
-  render(data) {
-    this.context.clearRect(0, this.options.text.height, this.gridWidth, this.gridHeight);
-    this.drawGrid(data);
-  }
-  setGridWidthHeight(days) {
-    let { size, space } = this.options.grid;
-    let column = Math.ceil((this.offsetCellCount + days) / 7);
-    this.gridWidth = column * size + (column - 1) * space;
-    this.gridHeight = 7 * size + 6 * space;
-  }
-  drawGrid(data) {
-    let totalDays = isLeapYear() ? 366 : 365;
-    let days = new Array(totalDays).fill(null);
-    if (!this.gridWidth) {
-      this.setGridWidthHeight(totalDays);
-    }
-    if (data) {
-      const dataTmp = data.reduce((target, v) => {
-        let day = getDayOfYear(new Date(v.date));
-        target[day] = v;
-        return target;
-      }, {});
-      for (let i = 0; i < days.length; i++) {
-        days[i] = dataTmp[i];
-      }
-    }
-    days.forEach((val, key) => {
-      this.drawRect(key + 1, val ? val.count : 0);
-    });
-  }
-  drawRect(index, count) {
-    let { size, space, defaultColor, primaryColor } = this.options.grid;
-    let [row, column] = this.getDayCellRowColumn(index);
-    let x = column * size + column * space;
-    let y = row * size + row * space;
-    let color = defaultColor;
-    if (count > 2) {
-      color = primaryColor;
-    } else if (count == 2) {
-      color = getHexOpacityColor(primaryColor, 0.8);
-    } else if (count == 1) {
-      color = getHexOpacityColor(primaryColor, 0.5);
-    }
-    this.context.fillStyle = color;
-    this.context.fillRect(x, this.options.text.height + y, size, size);
-  }
-  getDayCellRowColumn(day) {
-    let { offsetCellCount } = this;
-    let column = Math.ceil((day + offsetCellCount) / 7);
-    let row = 7 - (7 * column - day - offsetCellCount);
-    column = column - 1 > 0 ? column - 1 : 0;
-    row = row - 1 > 0 ? row - 1 : 0;
-    return [row, column];
+    }, this.options.text)).monthTitleData;
+    let grid = new Grid(this.offsetCellCount, __spreadValues({
+      offsetY: this.options.text.height
+    }, this.options.grid));
+    this.gridData = grid.gridData;
+    this.calendarWidth = grid.width;
+    this.calendarHeight = grid.height + this.options.text.height;
   }
   getOffsetCellCount() {
     let offsetCellCount = 0;
@@ -189,4 +146,5 @@ class CalendarGraph {
     return offsetCellCount;
   }
 }
+__publicField(CalendarGraph, "mergeData", Grid.mergeData);
 export { CalendarGraph };

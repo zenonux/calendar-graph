@@ -1,6 +1,6 @@
 # Calendar Graph
 
-calendar graph like github from h5 & wechat miniprogram.
+calendar graph like github for h5 & wechat miniprogram.
 
 ## Install
 

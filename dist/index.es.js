@@ -74,7 +74,7 @@ class Grid {
   }
   static mergeData(gridData, data) {
     const dataTmp = data.reduce((target, v) => {
-      let day = getDayOfYear(new Date(v.date));
+      let day = getDayOfYear(new Date(v.date)) - 1;
       target[day] = v;
       return target;
     }, {});
@@ -94,7 +94,7 @@ class MonthTitle {
       let column = this.getMonthColumn(key, options.offsetCellCount);
       return {
         title: key + 1 + "\u6708",
-        x: column * options.size + (column - 1 > 0 ? column - 1 : 0) * options.space,
+        x: column * options.size + column * options.space,
         y: 0
       };
     });

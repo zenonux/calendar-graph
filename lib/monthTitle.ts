@@ -1,8 +1,9 @@
 import { getDayOfYear } from './util'
 
-type MonthItem = {
+export type MonthItem = {
     title: string
-    column: number
+    x: number
+    y: number
 }
 type MonthOptions = {
     height: number
@@ -13,18 +14,19 @@ type MonthOptions = {
     color: string
 }
 export class MonthTitle {
-    data: MonthItem[]
-    constructor(context: CanvasRenderingContext2D, options: MonthOptions) {
-        this.init(context, options)
+    monthTitleData: MonthItem[]
+    constructor(options: MonthOptions) {
+        this.init(options)
     }
-    init(context: CanvasRenderingContext2D, options: MonthOptions) {
-        let data = new Array(12).fill(null).map((_val, key) => {
+    init(options: MonthOptions) {
+        this.monthTitleData = new Array(12).fill(null).map((_val, key) => {
+            let column = this.getMonthColumn(key, options.offsetCellCount);
             return {
                 title: key + 1 + '月',
-                column: this.getMonthColumn(key, options.offsetCellCount),
+                x: column * options.size + (column - 1 > 0 ? column - 1 : 0) * options.space,
+                y: 0,
             }
         })
-        this.render(context, data, options)
     }
     getMonthColumn(month: number, offsetCellCount: number) {
         let firstDay = new Date(
@@ -40,40 +42,5 @@ export class MonthTitle {
             return column
         }
         return column + 1
-    }
-    render(
-        context: CanvasRenderingContext2D,
-        data: MonthItem[],
-        opts: {
-            height: number
-            size: number
-            space: number
-            font: string
-            color: string
-        }
-    ) {
-        let arr = data.map((val, key) => {
-            return {
-                title: val.title,
-                x: val.column * opts.size + (val.column - 1 > 0 ? val.column - 1 : 0) * opts.space,
-                y: opts.height / 2,
-            }
-        })
-        arr.forEach((val) => {
-            this.drawText(context, val.title, val.x, val.y, opts.font, opts.color)
-        })
-    }
-    drawText(
-        context: CanvasRenderingContext2D,
-        text: string,
-        x: number,
-        y: number,
-        font: string,
-        color: string
-    ) {
-        context.font = font
-        context.fillStyle = color
-        context.textBaseline = 'middle'
-        context.fillText(text, x, y)
     }
 }

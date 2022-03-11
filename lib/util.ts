@@ -27,26 +27,3 @@ export function getDayOfYear(date = new Date()) {
 }
 
 
-export function getHexOpacityColor(color = '#000', opacity = 0.5) {
-    opacity = Math.max(opacity, 0);
-    opacity = Math.min(opacity, 1);
-    color = color.replace(/\#/g, '').toUpperCase();
-    if (color.length === 3) {
-        let arr = color.split('');
-        color = '';
-        for (let i = 0; i < arr.length; i++) {
-            color += (arr[i] + arr[i]);//将简写的3位字符补全到6位字符
-        }
-    }
-    let num = Math.round(255 * opacity);//四舍五入
-    let str = '';
-    let arrHex = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];//十六进制数组
-    while (num > 0) {
-        let mod = num % 16;
-        num = (num - mod) / 16;
-        str = arrHex[mod] + str;
-    }
-    if (str.length == 1) str = '0' + str;
-    if (str.length == 0) str = '00';
-    return `#${color + str}`;
-}

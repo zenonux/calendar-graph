@@ -95,7 +95,7 @@ class MonthTitle {
       return {
         title: key + 1 + "\u6708",
         x: column * options.size + column * options.space,
-        y: 0
+        y: options.titleHeight / 2
       };
     });
   }
@@ -110,32 +110,68 @@ class MonthTitle {
     return column + 1;
   }
 }
-class CalendarGraph {
-  constructor(options) {
-    __publicField(this, "offsetCellCount", 0);
-    __publicField(this, "options");
-    __publicField(this, "calendarWidth");
-    __publicField(this, "calendarHeight");
-    __publicField(this, "monthTitleData");
-    __publicField(this, "gridData");
-    this.offsetCellCount = this.getOffsetCellCount();
+class CanvasGraph {
+  constructor(canvas, options) {
+    __publicField(this, "context");
     this.options = options;
-    this.init();
+    this.context = canvas.getContext("2d");
+    canvas.width = options.calendarWidth;
+    canvas.height = options.calendarHeight;
+    this.render();
   }
-  init() {
-    this.monthTitleData = new MonthTitle({
-      offsetCellCount: this.offsetCellCount,
-      size: this.options.size,
-      space: this.options.space
-    }).monthTitleData;
-    let grid = new Grid(this.offsetCellCount, {
-      offsetY: this.options.titleHeight,
-      size: this.options.size,
-      space: this.options.space
+  render(data) {
+    this.context.clearRect(0, 0, this.options.calendarWidth, this.options.calendarHeight);
+    let { monthTitleData, gridData } = this.options;
+    if (data && data.length > 0) {
+      gridData = Grid.mergeData(gridData, data);
+    }
+    this.renderMonthTitle(monthTitleData);
+    this.renderGrid(gridData);
+  }
+  renderMonthTitle(monthTitleData) {
+    this.context.fillStyle = this.options.fontColor;
+    this.context.font = this.options.font;
+    this.context.textBaseline = "middle";
+    monthTitleData.forEach((val) => {
+      this.context.fillText(val.title, val.x, val.y);
     });
-    this.gridData = grid.gridData;
-    this.calendarWidth = grid.width;
-    this.calendarHeight = grid.height + this.options.titleHeight;
+  }
+  renderGrid(gridData) {
+    gridData.forEach((val) => {
+      this.context.fillStyle = this.options.colorFunc(val.count || 0);
+      this.context.fillRect(val.x, val.y, this.options.size, this.options.size);
+    });
+  }
+}
+class CalendarGraph {
+  constructor(canvas, options) {
+    __publicField(this, "canvasGraph");
+    __publicField(this, "offsetCellCount", 0);
+    this.offsetCellCount = this.getOffsetCellCount();
+    this.canvasGraph = this.init(canvas, options);
+  }
+  init(canvas, options) {
+    let month = new MonthTitle({
+      offsetCellCount: this.offsetCellCount,
+      size: options.size,
+      space: options.space,
+      titleHeight: options.titleHeight
+    });
+    let grid = new Grid(this.offsetCellCount, {
+      offsetY: options.titleHeight,
+      size: options.size,
+      space: options.space
+    });
+    return new CanvasGraph(canvas, {
+      calendarWidth: grid.width,
+      calendarHeight: grid.height + options.titleHeight,
+      gridData: grid.gridData,
+      monthTitleData: month.monthTitleData,
+      size: options.size,
+      font: options.font,
+      colorFunc: options.colorFunc,
+      fontColor: options.fontColor
+    });
   }
   getOffsetCellCount() {
     let offsetCellCount = 0;
@@ -147,6 +183,8 @@ class CalendarGraph {
     }
     return offsetCellCount;
   }
+  render(data) {
+    this.canvasGraph.render(data);
+  }
 }
-__publicField(CalendarGraph, "mergeData", Grid.mergeData);
 export { CalendarGraph };

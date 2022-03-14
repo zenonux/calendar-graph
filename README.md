@@ -21,30 +21,26 @@ npm i @urcloud/calendar-graph
 
 ```ts
 import { CalendarGraph } from '@urcloud/calendar-graph'
-// 初始化
-const calendarGraph = new CalendarGraph(
-  document.getElementById('canvas') as HTMLCanvasElement,
-  {
-    titleHeight: 24,
-    font: '14px Arial',
-    fontColor: '#232323',
-    size: 12,
-    space: 2,
-    colorFunc: (count: number) => {
-      if (count <= 0) {
-        return '#f1f1f1'
-      }
-      if (count == 1) {
-        return '#95aee1'
-      }
-      if (count == 2) {
-        return '#5c88e5'
-      }
-      return '#0f55e5'
-    },
-  }
-)
-// 数据加载后重新渲染画布
+const calendarGraph = new CalendarGraph({
+  titleHeight: 24,
+  font: '14px Arial',
+  fontColor: '#232323',
+  size: 12,
+  space: 2,
+  colorFunc: (count: number) => {
+    if (count <= 0) {
+      return '#f1f1f1'
+    }
+    if (count == 1) {
+      return '#95aee1'
+    }
+    if (count == 2) {
+      return '#5c88e5'
+    }
+    return '#0f55e5'
+  },
+})
+calendarGraph.setCanvas(document.getElementById('canvas') as HTMLCanvasElement)
 const data = [
   { date: '2022-2-10', count: 1 },
   { date: '2022-3-10', count: 1 },

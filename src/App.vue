@@ -8,7 +8,7 @@ import { CalendarGraph } from '../lib'
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 
 onMounted(() => {
-  const calendarGraph = new CalendarGraph(document.getElementById('canvas') as HTMLCanvasElement, {
+  const calendarGraph = new CalendarGraph({
     titleHeight: 24,
     font: '14px Arial',
     fontColor: '#232323',
@@ -27,6 +27,7 @@ onMounted(() => {
       return '#0f55e5'
     }
   });
+  calendarGraph.setCanvas(document.getElementById('canvas') as HTMLCanvasElement)
   const data = [
     { date: '2022-2-10', count: 1 },
     { date: '2022-3-10', count: 1 },

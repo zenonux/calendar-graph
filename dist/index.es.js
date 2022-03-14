@@ -144,37 +144,42 @@ class CanvasGraph {
   }
 }
 class CalendarGraph {
-  constructor(canvas, options) {
+  constructor(_options) {
     __publicField(this, "canvasWidth");
     __publicField(this, "canvasHeight");
+    __publicField(this, "_monthTitle");
+    __publicField(this, "_grid");
     __publicField(this, "_canvasGraph");
-    this._canvasGraph = this.init(canvas, options);
+    this._options = _options;
+    this.init(_options);
   }
-  init(canvas, options) {
+  setCanvas(canvas) {
+    this._canvasGraph = new CanvasGraph(canvas, {
+      calendarWidth: this.canvasWidth,
+      calendarHeight: this.canvasHeight,
+      gridData: this._grid.gridData,
+      monthTitleData: this._monthTitle.monthTitleData,
+      size: this._options.size,
+      font: this._options.font,
+      colorFunc: this._options.colorFunc,
+      fontColor: this._options.fontColor
+    });
+  }
+  init(options) {
     let offsetCellCount = this.getOffsetCellCount();
-    let month = new MonthTitle({
+    this._monthTitle = new MonthTitle({
       offsetCellCount,
       size: options.size,
       space: options.space,
       titleHeight: options.titleHeight
     });
-    let grid = new Grid(offsetCellCount, {
+    this._grid = new Grid(offsetCellCount, {
       offsetY: options.titleHeight,
       size: options.size,
       space: options.space
     });
-    this.canvasWidth = grid.width;
-    this.canvasHeight = grid.height + options.titleHeight;
-    return new CanvasGraph(canvas, {
-      calendarWidth: this.canvasWidth,
-      calendarHeight: this.canvasHeight,
-      gridData: grid.gridData,
-      monthTitleData: month.monthTitleData,
-      size: options.size,
-      font: options.font,
-      colorFunc: options.colorFunc,
-      fontColor: options.fontColor
-    });
+    this.canvasWidth = this._grid.width;
+    this.canvasHeight = this._grid.height + options.titleHeight;
   }
   getOffsetCellCount() {
     let offsetCellCount = 0;

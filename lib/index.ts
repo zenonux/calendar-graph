@@ -15,37 +15,42 @@ type CanvasGraphOptions = {
 export class CalendarGraph {
   canvasWidth: number
   canvasHeight: number
+  private _monthTitle: MonthTitle;
+  private _grid: Grid;
   private _canvasGraph: CanvasGraph;
-  constructor(canvas: HTMLCanvasElement, options: CanvasGraphOptions) {
-    this._canvasGraph = this.init(canvas, options)
+  constructor(private _options: CanvasGraphOptions) {
+    this.init(_options)
   }
 
-  init(canvas: HTMLCanvasElement, options: CanvasGraphOptions) {
-    let offsetCellCount = this.getOffsetCellCount()
+  setCanvas(canvas: HTMLCanvasElement) {
+    this._canvasGraph = new CanvasGraph(canvas, {
+      calendarWidth: this.canvasWidth,
+      calendarHeight: this.canvasHeight,
+      gridData: this._grid.gridData,
+      monthTitleData: this._monthTitle.monthTitleData,
+      size: this._options.size,
+      font: this._options.font,
+      colorFunc: this._options.colorFunc,
+      fontColor: this._options.fontColor
+    })
+  }
 
-    let month = new MonthTitle({
+  init(options: CanvasGraphOptions) {
+    let offsetCellCount = this.getOffsetCellCount()
+    this._monthTitle = new MonthTitle({
       offsetCellCount: offsetCellCount,
       size: options.size,
       space: options.space,
       titleHeight: options.titleHeight
     })
-    let grid = new Grid(offsetCellCount, {
+    this._grid = new Grid(offsetCellCount, {
       offsetY: options.titleHeight,
       size: options.size,
       space: options.space,
     })
-    this.canvasWidth = grid.width
-    this.canvasHeight = grid.height + options.titleHeight
-    return new CanvasGraph(canvas, {
-      calendarWidth: this.canvasWidth,
-      calendarHeight: this.canvasHeight,
-      gridData: grid.gridData,
-      monthTitleData: month.monthTitleData,
-      size: options.size,
-      font: options.font,
-      colorFunc: options.colorFunc,
-      fontColor: options.fontColor
-    })
+    this.canvasWidth = this._grid.width
+    this.canvasHeight = this._grid.height + options.titleHeight
+
   }
   // 单元格从左到右，从上到下进行偏移, 确保每年的第一天和星期几对应
   private getOffsetCellCount() {

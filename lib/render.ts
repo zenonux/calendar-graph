@@ -14,7 +14,7 @@ type CanvasGraphOptions = {
 }
 
 export class CanvasGraph {
-    private _context: CanvasRenderingContext2D
+    private _context: any
     private _ratio: number
     constructor(canvas: HTMLCanvasElement, private options: CanvasGraphOptions) {
         this._context = canvas.getContext('2d')
@@ -23,7 +23,7 @@ export class CanvasGraph {
         canvas.height = options.calendarHeight * this._ratio
         this.render()
     }
-    initRatio(devicePixelRatio: number, context: CanvasRenderingContext2D) {
+    initRatio(devicePixelRatio: number, context: any) {
         devicePixelRatio = devicePixelRatio || window.devicePixelRatio || 1;
         let backingStoreRatio = context.webkitBackingStorePixelRatio || 1;
         return devicePixelRatio / backingStoreRatio;

@@ -112,34 +112,42 @@ class MonthTitle {
 }
 class CanvasGraph {
   constructor(canvas, options) {
-    __publicField(this, "context");
+    __publicField(this, "_context");
+    __publicField(this, "_ratio");
     this.options = options;
-    this.context = canvas.getContext("2d");
-    canvas.width = options.calendarWidth;
-    canvas.height = options.calendarHeight;
+    this._context = canvas.getContext("2d");
+    this._ratio = this.initRatio(options.devicePixelRatio, this._context);
+    canvas.width = options.calendarWidth * this._ratio;
+    canvas.height = options.calendarHeight * this._ratio;
     this.render();
   }
+  initRatio(devicePixelRatio, context) {
+    devicePixelRatio = devicePixelRatio || window.devicePixelRatio || 1;
+    let backingStoreRatio = context.webkitBackingStorePixelRatio || 1;
+    return devicePixelRatio / backingStoreRatio;
+  }
   render(data) {
-    this.context.clearRect(0, 0, this.options.calendarWidth, this.options.calendarHeight);
+    this._context.clearRect(0, 0, this.options.calendarWidth, this.options.calendarHeight);
     let { monthTitleData, gridData } = this.options;
     if (data && data.length > 0) {
       gridData = Grid.mergeData(gridData, data);
     }
     this.renderMonthTitle(monthTitleData);
     this.renderGrid(gridData);
+    this._context.scale(this._ratio, this._ratio);
   }
   renderMonthTitle(monthTitleData) {
-    this.context.fillStyle = this.options.fontColor;
-    this.context.font = this.options.font;
-    this.context.textBaseline = "middle";
+    this._context.fillStyle = this.options.fontColor;
+    this._context.font = this.options.font;
+    this._context.textBaseline = "middle";
     monthTitleData.forEach((val) => {
-      this.context.fillText(val.title, val.x, val.y);
+      this._context.fillText(val.title, val.x, val.y);
     });
   }
   renderGrid(gridData) {
     gridData.forEach((val) => {
-      this.context.fillStyle = this.options.colorFunc(val.count || 0);
-      this.context.fillRect(val.x, val.y, this.options.size, this.options.size);
+      this._context.fillStyle = this.options.colorFunc(val.count || 0);
+      this._context.fillRect(val.x, val.y, this.options.size, this.options.size);
     });
   }
 }
@@ -155,6 +163,7 @@ class CalendarGraph {
   }
   setCanvas(canvas) {
     this._canvasGraph = new CanvasGraph(canvas, {
+      devicePixelRatio: this._options.devicePixelRatio,
       calendarWidth: this.canvasWidth,
       calendarHeight: this.canvasHeight,
       gridData: this._grid.gridData,

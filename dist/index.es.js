@@ -145,26 +145,29 @@ class CanvasGraph {
 }
 class CalendarGraph {
   constructor(canvas, options) {
-    __publicField(this, "canvasGraph");
-    __publicField(this, "offsetCellCount", 0);
-    this.offsetCellCount = this.getOffsetCellCount();
-    this.canvasGraph = this.init(canvas, options);
+    __publicField(this, "canvasWidth");
+    __publicField(this, "canvasHeight");
+    __publicField(this, "_canvasGraph");
+    this._canvasGraph = this.init(canvas, options);
   }
   init(canvas, options) {
+    let offsetCellCount = this.getOffsetCellCount();
     let month = new MonthTitle({
-      offsetCellCount: this.offsetCellCount,
+      offsetCellCount,
       size: options.size,
       space: options.space,
       titleHeight: options.titleHeight
     });
-    let grid = new Grid(this.offsetCellCount, {
+    let grid = new Grid(offsetCellCount, {
       offsetY: options.titleHeight,
       size: options.size,
       space: options.space
     });
+    this.canvasWidth = grid.width;
+    this.canvasHeight = grid.height + options.titleHeight;
     return new CanvasGraph(canvas, {
-      calendarWidth: grid.width,
-      calendarHeight: grid.height + options.titleHeight,
+      calendarWidth: this.canvasWidth,
+      calendarHeight: this.canvasHeight,
       gridData: grid.gridData,
       monthTitleData: month.monthTitleData,
       size: options.size,
@@ -184,7 +187,7 @@ class CalendarGraph {
     return offsetCellCount;
   }
   render(data) {
-    this.canvasGraph.render(data);
+    this._canvasGraph.render(data);
   }
 }
 export { CalendarGraph };

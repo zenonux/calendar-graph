@@ -13,28 +13,32 @@ type CanvasGraphOptions = {
 }
 
 export class CalendarGraph {
-  private canvasGraph: CanvasGraph;
-  private offsetCellCount: number = 0
+  canvasWidth: number
+  canvasHeight: number
+  private _canvasGraph: CanvasGraph;
   constructor(canvas: HTMLCanvasElement, options: CanvasGraphOptions) {
-    this.offsetCellCount = this.getOffsetCellCount()
-    this.canvasGraph = this.init(canvas, options)
+    this._canvasGraph = this.init(canvas, options)
   }
 
   init(canvas: HTMLCanvasElement, options: CanvasGraphOptions) {
+    let offsetCellCount = this.getOffsetCellCount()
+
     let month = new MonthTitle({
-      offsetCellCount: this.offsetCellCount,
+      offsetCellCount: offsetCellCount,
       size: options.size,
       space: options.space,
       titleHeight: options.titleHeight
     })
-    let grid = new Grid(this.offsetCellCount, {
+    let grid = new Grid(offsetCellCount, {
       offsetY: options.titleHeight,
       size: options.size,
       space: options.space,
     })
+    this.canvasWidth = grid.width
+    this.canvasHeight = grid.height + options.titleHeight
     return new CanvasGraph(canvas, {
-      calendarWidth: grid.width,
-      calendarHeight: grid.height + options.titleHeight,
+      calendarWidth: this.canvasWidth,
+      calendarHeight: this.canvasHeight,
       gridData: grid.gridData,
       monthTitleData: month.monthTitleData,
       size: options.size,
@@ -57,7 +61,7 @@ export class CalendarGraph {
   }
 
   render(data: DataItem[]) {
-    this.canvasGraph.render(data)
+    this._canvasGraph.render(data)
   }
 
 }

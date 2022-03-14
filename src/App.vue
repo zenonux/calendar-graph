@@ -20,13 +20,13 @@ onMounted(() => {
         return '#f1f1f1'
       }
       if (count == 1) {
-        return '#95aee1'
+        return '#b2dbfb'
       }
       if (count == 2) {
-        return '#5c88e5'
+        return '#6ab8f7'
       }
-      return '#0f55e5'
-    }
+      return '#2196f3'
+    },
   });
   calendarGraph.setCanvas(document.getElementById('canvas') as HTMLCanvasElement)
   const data = [
@@ -48,34 +48,5 @@ body {
   margin: 0;
   padding: 0;
   background: #ddd;
-}
-
-.calendar {
-  position: relative;
-  background: #fff;
-}
-.month,
-.cell {
-  z-index: 10;
-  position: absolute;
-}
-.month {
-  font-size: 12px;
-  height: 24px;
-  line-height: 24px;
-}
-.cell {
-  background: #eee;
-  width: 12px;
-  height: 12px;
-}
-.cell-1 {
-  background: red;
-}
-.cell-2 {
-  background: green;
-}
-.cell-3 {
-  background: blue;
 }
 </style>

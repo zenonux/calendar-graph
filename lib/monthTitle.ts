@@ -1,17 +1,18 @@
 import { getDayOfYear } from './util'
 
-export type MonthItem = {
+export type MonthTitleItem = {
     title: string
     x: number
     y: number
 }
 type MonthOptions = {
+    titleHeight: number
     size: number
     offsetCellCount: number
     space: number
 }
 export class MonthTitle {
-    monthTitleData: MonthItem[]
+    monthTitleData: MonthTitleItem[]
     constructor(options: MonthOptions) {
         this.init(options)
     }
@@ -21,7 +22,7 @@ export class MonthTitle {
             return {
                 title: key + 1 + '月',
                 x: column * options.size + column * options.space,
-                y: 0,
+                y: options.titleHeight / 2,
             }
         })
     }

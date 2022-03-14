@@ -1,40 +1,47 @@
-import { Grid, GridItem } from "./grid"
-import { MonthItem, MonthTitle } from "./monthTitle"
+import { DataItem, Grid, } from "./grid"
+import { MonthTitle } from "./monthTitle"
+import { CanvasGraph } from "./render"
 import { getFirstDayOfYear } from "./util"
 
 type CanvasGraphOptions = {
+  font: string
+  fontColor: string
+  titleHeight: number
   size: number
   space: number
-  titleHeight: number
+  colorFunc: (count: number) => string
 }
 
 export class CalendarGraph {
+  private canvasGraph: CanvasGraph;
   private offsetCellCount: number = 0
-  private options: CanvasGraphOptions
-  calendarWidth: number
-  calendarHeight: number
-  monthTitleData: MonthItem[]
-  gridData: GridItem[]
-  constructor(options: CanvasGraphOptions) {
+  constructor(canvas: HTMLCanvasElement, options: CanvasGraphOptions) {
     this.offsetCellCount = this.getOffsetCellCount()
-    this.options = options
-    this.init()
+    this.canvasGraph = this.init(canvas, options)
   }
 
-  init() {
-    this.monthTitleData = new MonthTitle({
+  init(canvas: HTMLCanvasElement, options: CanvasGraphOptions) {
+    let month = new MonthTitle({
       offsetCellCount: this.offsetCellCount,
-      size: this.options.size,
-      space: this.options.space,
-    }).monthTitleData
-    let grid = new Grid(this.offsetCellCount, {
-      offsetY: this.options.titleHeight,
-      size: this.options.size,
-      space: this.options.space,
+      size: options.size,
+      space: options.space,
+      titleHeight: options.titleHeight
     })
-    this.gridData = grid.gridData
-    this.calendarWidth = grid.width
-    this.calendarHeight = grid.height + this.options.titleHeight
+    let grid = new Grid(this.offsetCellCount, {
+      offsetY: options.titleHeight,
+      size: options.size,
+      space: options.space,
+    })
+    return new CanvasGraph(canvas, {
+      calendarWidth: grid.width,
+      calendarHeight: grid.height + options.titleHeight,
+      gridData: grid.gridData,
+      monthTitleData: month.monthTitleData,
+      size: options.size,
+      font: options.font,
+      colorFunc: options.colorFunc,
+      fontColor: options.fontColor
+    })
   }
   // 单元格从左到右，从上到下进行偏移, 确保每年的第一天和星期几对应
   private getOffsetCellCount() {
@@ -49,7 +56,9 @@ export class CalendarGraph {
     return offsetCellCount
   }
 
-  static mergeData = Grid.mergeData
+  render(data: DataItem[]) {
+    this.canvasGraph.render(data)
+  }
 
 }
 

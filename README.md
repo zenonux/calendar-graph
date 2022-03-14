@@ -1,6 +1,6 @@
 # Calendar Graph
 
-移动端类似于 github 提交日历的效果，为了兼容小程序，仅实现逻辑部分，渲染部分不实现。
+移动端类似于 github 提交日历的效果，基于 canvas 实现，兼容小程序。
 
 ## 本地测试 demo
 
@@ -22,14 +22,29 @@ npm i @urcloud/calendar-graph
 ```ts
 import { CalendarGraph } from '@urcloud/calendar-graph'
 // 初始化
-const calendarGraph = new CalendarGraph({
-  titleHeight: 24,
-  size: 12,
-  space: 2,
-})
-console.log(calendarGraph)
-let { monthTitleData, gridData, calendarWidth, calendarHeight } = calendarGraph
-// 等待数据加载后重新渲染grid
+const calendarGraph = new CalendarGraph(
+  document.getElementById('canvas') as HTMLCanvasElement,
+  {
+    titleHeight: 24,
+    font: '14px Arial',
+    fontColor: '#232323',
+    size: 12,
+    space: 2,
+    colorFunc: (count: number) => {
+      if (count <= 0) {
+        return '#f1f1f1'
+      }
+      if (count == 1) {
+        return '#95aee1'
+      }
+      if (count == 2) {
+        return '#5c88e5'
+      }
+      return '#0f55e5'
+    },
+  }
+)
+// 数据加载后重新渲染画布
 const data = [
   { date: '2022-2-10', count: 1 },
   { date: '2022-3-10', count: 1 },
@@ -38,6 +53,5 @@ const data = [
   { date: '2022-3-13', count: 1 },
   { date: '2022-3-14', count: 3 },
 ]
-gridData = CalendarGraph.mergeData(gridData, data)
-console.log(gridData)
+calendarGraph.render(data)
 ```

@@ -4,6 +4,7 @@ import { CanvasGraph } from "./render"
 import { getFirstDayOfYear } from "./util"
 
 type CanvasGraphOptions = {
+  devicePixelRatio: number
   font: string
   fontColor: string
   titleHeight: number
@@ -24,6 +25,7 @@ export class CalendarGraph {
 
   setCanvas(canvas: HTMLCanvasElement) {
     this._canvasGraph = new CanvasGraph(canvas, {
+      devicePixelRatio: this._options.devicePixelRatio,
       calendarWidth: this.canvasWidth,
       calendarHeight: this.canvasHeight,
       gridData: this._grid.gridData,

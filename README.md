@@ -22,6 +22,7 @@ npm i @urcloud/calendar-graph
 ```ts
 import { CalendarGraph } from '@urcloud/calendar-graph'
 const calendarGraph = new CalendarGraph({
+  devicePixelRatio: 1,
   titleHeight: 24,
   font: '14px Arial',
   fontColor: '#232323',

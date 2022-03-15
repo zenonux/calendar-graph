@@ -43,13 +43,10 @@ function getLastWeekdaysOfMonth(month) {
   let loop = 7;
   let lastDay = getLastDayOfMonth(month);
   while (loop) {
-    days.push(getDayOfYear(getPrevDay(lastDay, loop)));
+    days.push(getDayOfYear(lastDay) - loop + 1);
     loop--;
   }
   return days;
-}
-function getPrevDay(day, count) {
-  return new Date(day.getFullYear(), day.getMonth(), day.getDay() - count);
 }
 function getLastDayOfMonth(month) {
   return new Date(new Date().getFullYear(), month + 1, 0);
@@ -135,6 +132,7 @@ class MonthBoundary {
         value: getLastWeekdaysOfMonth(i)
       });
     }
+    console.log(boundary);
     return boundary;
   }
   _getBoundaryLine(days, type) {

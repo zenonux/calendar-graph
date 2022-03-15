@@ -7,6 +7,7 @@ type CanvasGraphOptions = {
     devicePixelRatio: number
     colorFunc: (count: number) => string
     size: number
+    space: number
     font: string
     fontColor: string
     monthTitleData: MonthTitleItem[]
@@ -55,6 +56,7 @@ export class CanvasGraph {
 
     renderMonthBoundary(monthBoundaryData: MonthBoundaryItem[]) {
         this._context.strokeStyle = this._options.borderColor
+        this._context.lineWidth = this._options.space
         this._context.beginPath()
         monthBoundaryData.forEach(val => {
             this._context.moveTo(val[0].x, val[0].y)

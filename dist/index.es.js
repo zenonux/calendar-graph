@@ -272,6 +272,7 @@ class CanvasGraph {
   }
   renderMonthBoundary(monthBoundaryData) {
     this._context.strokeStyle = this._options.borderColor;
+    this._context.lineWidth = this._options.space;
     this._context.beginPath();
     monthBoundaryData.forEach((val) => {
       this._context.moveTo(val[0].x, val[0].y);
@@ -309,6 +310,7 @@ class CalendarGraph {
       monthTitleData: this._monthTitle.monthTitleData,
       monthBoundaryData: this._monthBoundary.monthBoundaryData,
       size: this._options.size,
+      space: this._options.space,
       font: this._options.font,
       colorFunc: this._options.colorFunc,
       fontColor: this._options.fontColor,

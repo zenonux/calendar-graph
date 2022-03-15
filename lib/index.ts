@@ -35,6 +35,7 @@ export class CalendarGraph {
       monthTitleData: this._monthTitle.monthTitleData,
       monthBoundaryData: this._monthBoundary.monthBoundaryData,
       size: this._options.size,
+      space: this._options.space,
       font: this._options.font,
       colorFunc: this._options.colorFunc,
       fontColor: this._options.fontColor,

@@ -36,6 +36,7 @@ export class MonthBoundary {
                 value: getLastWeekdaysOfMonth(i)
             })
         }
+        console.log(boundary)
         return boundary
     }
     private _getBoundaryLine(days: number[], type: BoundaryType) {

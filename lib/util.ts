@@ -31,14 +31,10 @@ export function getLastWeekdaysOfMonth(month: number) {
     let loop = 7;
     let lastDay = getLastDayOfMonth(month)
     while (loop) {
-        days.push(getDayOfYear(getPrevDay(lastDay, loop)))
+        days.push(getDayOfYear(lastDay) - loop + 1)
         loop--;
     }
     return days
-}
-
-function getPrevDay(day: Date, count: number) {
-    return new Date(day.getFullYear(), day.getMonth(), day.getDay() - count)
 }
 
 

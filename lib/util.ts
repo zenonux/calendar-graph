@@ -26,4 +26,23 @@ export function getDayOfYear(date = new Date()) {
     return differenceInDays;
 }
 
+export function getLastWeekdaysOfMonth(month: number) {
+    let days = [];
+    let loop = 7;
+    let lastDay = getLastDayOfMonth(month)
+    while (loop) {
+        days.push(getDayOfYear(getPrevDay(lastDay, loop)))
+        loop--;
+    }
+    return days
+}
+
+function getPrevDay(day: Date, count: number) {
+    return new Date(day.getFullYear(), day.getMonth(), day.getDay() - count)
+}
+
+
+function getLastDayOfMonth(month: number) {
+    return new Date(new Date().getFullYear(), month + 1, 0)
+}
 

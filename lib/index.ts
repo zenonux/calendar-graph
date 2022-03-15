@@ -1,4 +1,5 @@
 import { DataItem, Grid, } from "./grid"
+import { MonthBoundary } from "./monthBoundary"
 import { MonthTitle } from "./monthTitle"
 import { CanvasGraph } from "./render"
 import { getFirstDayOfYear } from "./util"
@@ -7,6 +8,7 @@ type CanvasGraphOptions = {
   devicePixelRatio: number
   font: string
   fontColor: string
+  borderColor: string
   titleHeight: number
   size: number
   space: number
@@ -19,6 +21,7 @@ export class CalendarGraph {
   private _monthTitle: MonthTitle;
   private _grid: Grid;
   private _canvasGraph: CanvasGraph;
+  private _monthBoundary: MonthBoundary
   constructor(private _options: CanvasGraphOptions) {
     this.init(_options)
   }
@@ -30,10 +33,12 @@ export class CalendarGraph {
       calendarHeight: this.canvasHeight,
       gridData: this._grid.gridData,
       monthTitleData: this._monthTitle.monthTitleData,
+      monthBoundaryData: this._monthBoundary.monthBoundaryData,
       size: this._options.size,
       font: this._options.font,
       colorFunc: this._options.colorFunc,
-      fontColor: this._options.fontColor
+      fontColor: this._options.fontColor,
+      borderColor: this._options.borderColor
     })
   }
 
@@ -52,7 +57,10 @@ export class CalendarGraph {
     })
     this.canvasWidth = this._grid.width
     this.canvasHeight = this._grid.height + options.titleHeight
-
+    this._monthBoundary = new MonthBoundary(this._grid, {
+      size: this._options.size,
+      space: this._options.space,
+    })
   }
   // 单元格从左到右，从上到下进行偏移, 确保每年的第一天和星期几对应
   private getOffsetCellCount() {

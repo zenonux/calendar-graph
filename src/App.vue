@@ -2,13 +2,12 @@
   <canvas id="canvas"></canvas>
 </template>
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
 import { onMounted } from 'vue';
 import { CalendarGraph } from '../lib'
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 
 onMounted(() => {
   const calendarGraph = new CalendarGraph({
+    borderColor: 'red',
     devicePixelRatio: 1,
     titleHeight: 24,
     font: '14px Arial',

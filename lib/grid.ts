@@ -38,15 +38,17 @@ export class Grid {
     setGridWidthHeight(days: number) {
         let { size, space } = this.options
         let column = Math.ceil((this.offsetCellCount + days) / 7)
-        this.width = column * size + (column - 1) * space
-        this.height = 7 * size + 6 * space
+        // 增加2个space宽度
+        this.width = column * size + (column + 2) * space
+        this.height = 7 * size + 8 * space
     }
 
     getCellPostionByDay(day: number) {
         let { size, space } = this.options
         let [row, column] = this.getCellRowColumnByDay(day)
-        let x = column * size + column * space;
-        let y = this.options.offsetY + row * size + row * space;
+        // 偏移一个space
+        let x = column * size + column * space + space;
+        let y = this.options.offsetY + row * size + row * space + space;
         return { x, y }
     }
 

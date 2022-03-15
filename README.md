@@ -21,8 +21,8 @@ npm i @urcloud/calendar-graph
 
 ```ts
 import { CalendarGraph } from '@urcloud/calendar-graph'
-// 初始化
 const calendarGraph = new CalendarGraph({
+  borderColor: 'red',
   devicePixelRatio: 1,
   titleHeight: 24,
   font: '14px Arial',
@@ -42,9 +42,7 @@ const calendarGraph = new CalendarGraph({
     return '#2196f3'
   },
 })
-// 小程序端canvas是异步获取的
 calendarGraph.setCanvas(document.getElementById('canvas') as HTMLCanvasElement)
-// 等待数据加载后重新渲染画布
 const data = [
   { date: '2022-2-10', count: 1 },
   { date: '2022-3-10', count: 1 },

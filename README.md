@@ -21,12 +21,13 @@ npm i @urcloud/calendar-graph
 
 ```ts
 import { CalendarGraph } from '@urcloud/calendar-graph'
+// 初始化
 const calendarGraph = new CalendarGraph({
-  borderColor: 'red',
   devicePixelRatio: 1,
   titleHeight: 24,
   font: '14px Arial',
   fontColor: '#232323',
+  borderColor: '#ddd',
   size: 12,
   space: 2,
   colorFunc: (count: number) => {
@@ -42,6 +43,7 @@ const calendarGraph = new CalendarGraph({
     return '#2196f3'
   },
 })
+// 小程序canvas是异步获取
 calendarGraph.setCanvas(document.getElementById('canvas') as HTMLCanvasElement)
 const data = [
   { date: '2022-2-10', count: 1 },
@@ -51,5 +53,6 @@ const data = [
   { date: '2022-3-13', count: 1 },
   { date: '2022-3-14', count: 3 },
 ]
+// 等待数据加载后重新渲染画布
 calendarGraph.render(data)
 ```

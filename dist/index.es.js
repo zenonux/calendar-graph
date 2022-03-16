@@ -132,7 +132,6 @@ class MonthBoundary {
         value: getLastWeekdaysOfMonth(i)
       });
     }
-    console.log(boundary);
     return boundary;
   }
   _getBoundaryLine(days, type) {
@@ -219,16 +218,16 @@ class MonthTitle {
       let column = this.getMonthColumn(key, options.offsetCellCount);
       return {
         title: key + 1 + "\u6708",
-        x: column * options.size + column * options.space,
+        x: column * options.size + column * options.space + options.space / 2,
         y: options.titleHeight / 2
       };
     });
   }
   getMonthColumn(month, offsetCellCount) {
-    let firstDay = new Date(new Date().getFullYear(), month, 1 + offsetCellCount);
+    let firstDay = new Date(new Date().getFullYear(), month, 1);
     let day = getDayOfYear(firstDay);
     let weekday = firstDay.getDay();
-    let column = Math.ceil(day / 7) - 1;
+    let column = Math.ceil((day + offsetCellCount) / 7) - 1;
     if (weekday == 1) {
       return column;
     }
@@ -266,13 +265,14 @@ class CanvasGraph {
     this._context.fillStyle = this._options.fontColor;
     this._context.font = this._options.font;
     this._context.textBaseline = "middle";
+    this._context.textAlign = "left";
     monthTitleData.forEach((val) => {
       this._context.fillText(val.title, val.x, val.y);
     });
   }
   renderMonthBoundary(monthBoundaryData) {
     this._context.strokeStyle = this._options.borderColor;
-    this._context.lineWidth = this._options.space;
+    this._context.lineWidth = this._options.space / 2;
     this._context.beginPath();
     this._context.setLineDash([this._options.space * 2, this._options.space]);
     monthBoundaryData.forEach((val) => {

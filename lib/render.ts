@@ -49,6 +49,7 @@ export class CanvasGraph {
         this._context.fillStyle = this._options.fontColor
         this._context.font = this._options.font
         this._context.textBaseline = 'middle'
+        this._context.textAlign = 'left'
         monthTitleData.forEach(val => {
             this._context.fillText(val.title, val.x, val.y)
         })
@@ -56,7 +57,7 @@ export class CanvasGraph {
 
     renderMonthBoundary(monthBoundaryData: MonthBoundaryItem[]) {
         this._context.strokeStyle = this._options.borderColor
-        this._context.lineWidth = this._options.space
+        this._context.lineWidth = this._options.space / 2
         this._context.beginPath()
         this._context.setLineDash([this._options.space * 2,this._options.space])
         monthBoundaryData.forEach(val => {

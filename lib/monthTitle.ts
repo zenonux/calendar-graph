@@ -21,7 +21,7 @@ export class MonthTitle {
             let column = this.getMonthColumn(key, options.offsetCellCount);
             return {
                 title: key + 1 + '月',
-                x: column * options.size + column * options.space,
+                x: column * options.size + column * options.space + options.space / 2,
                 y: options.titleHeight / 2,
             }
         })
@@ -30,11 +30,12 @@ export class MonthTitle {
         let firstDay = new Date(
             new Date().getFullYear(),
             month,
-            1 + offsetCellCount
+            1 
         )
         let day = getDayOfYear(firstDay)
         let weekday = firstDay.getDay()
-        let column = Math.ceil(day / 7) - 1
+
+        let column = Math.ceil((day + offsetCellCount) / 7) - 1
         // 第一天就是周一
         if (weekday == 1) {
             return column

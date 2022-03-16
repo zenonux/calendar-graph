@@ -7,11 +7,11 @@ import { CalendarGraph } from '../lib'
 
 onMounted(() => {
   const calendarGraph = new CalendarGraph({
-    borderColor: 'red',
     devicePixelRatio: 1,
     titleHeight: 24,
     font: '14px Arial',
     fontColor: '#232323',
+    borderColor: '#ddd',
     size: 12,
     space: 2,
     colorFunc: (count: number) => {
@@ -42,10 +42,9 @@ onMounted(() => {
 </script>
 <style>
 html,
-html,
 body {
   margin: 0;
   padding: 0;
-  background: #ddd;
+  background: #fff;
 }
 </style>

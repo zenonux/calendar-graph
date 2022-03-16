@@ -58,6 +58,7 @@ export class CanvasGraph {
         this._context.strokeStyle = this._options.borderColor
         this._context.lineWidth = this._options.space
         this._context.beginPath()
+        this._context.setLineDash([this._options.space * 2,this._options.space])
         monthBoundaryData.forEach(val => {
             this._context.moveTo(val[0].x, val[0].y)
             val.forEach((item) => {

@@ -1,6 +1,6 @@
 {
   "name": "@urcloud/calendar-graph",
-  "version": "1.3.3",
+  "version": "1.3.5",
   "description": "calendar graph like github for h5 & wechat miniprogram.",
   "publishConfig": {
     "access": "public"

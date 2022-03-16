@@ -46,7 +46,9 @@ export class MonthBoundary {
         days.forEach(val => {
             let { x, y } = this._grid.getCellPostionByDay(val)
             if (type == 'end') {
-                x = x + this._opts.size + this._opts.space;
+                x = x + this._opts.size + this._opts.space / 2;
+            }else{
+                x = x  - this._opts.space / 2;
             }
             xDots.push(x)
             yDots.push(y)
@@ -90,15 +92,15 @@ export class MonthBoundary {
         }
         this._bottomBoundaryData.push({
             x: xMin,
-            y: yMax
+            y: yMax + this._opts.space / 2
         })
         this._topBoundaryData.push({
             x: xMax,
-            y: yMin
+            y: yMin - this._opts.space / 2
         })
         return [{
             x: xMin,
-            y: yMax
+            y: yMax 
         },
         ...middleDots,
         {

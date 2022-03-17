@@ -5,11 +5,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Calendar Graph Demo</title>
 </head>
 
 <body>
-
+    <div id="canvas"></div>
 </body>
+<script src="./index.umd.js"></script>
+<script>
+    const calendarGraph = new CalendarGraph({
+        devicePixelRatio: 1,
+        titleHeight: 24,
+        font: '14px Arial',
+        fontColor: '#232323',
+        borderColor: '#ddd',
+        size: 12,
+        space: 2,
+        colorFunc: (count) => {
+            if (count <= 0) {
+                return '#f1f1f1'
+            }
+            if (count == 1) {
+                return '#b2dbfb'
+            }
+            if (count == 2) {
+                return '#6ab8f7'
+            }
+            return '#2196f3'
+        },
+    })
+    calendarGraph.setCanvas(document.getElementById('canvas'))
+    const data = [
+        { date: '2022-2-10', count: 1 },
+        { date: '2022-3-10', count: 1 },
+        { date: '2022-3-11', count: 1 },
+        { date: '2022-3-12', count: 2 },
+        { date: '2022-3-13', count: 1 },
+        { date: '2022-3-14', count: 3 },
+    ]
+    calendarGraph.render(data)
+</script>
 
 </html>

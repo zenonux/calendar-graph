@@ -6,16 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar Graph Demo</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
 </head>
 
 <body>
-    <div id="canvas"></div>
+    <canvas id="canvas"></canvas>
 </body>
 <script src="./index.umd.js"></script>
 <script>
     const calendarGraph = new CalendarGraph.CalendarGraph({
         devicePixelRatio: 1,
-        titleHeight: 24,
+        titleHeight: 28,
         font: '14px Arial',
         fontColor: '#232323',
         borderColor: '#ddd',

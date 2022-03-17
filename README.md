@@ -2,14 +2,9 @@
 
 移动端类似于 github 提交日历的效果，基于 canvas 实现，兼容小程序。
 
-## 本地测试 demo
+## Online Demo
 
-```bash
-git clone https://github.com/zenonux/calendar-graph.git
-cd calendar-graph
-npm i
-npm run dev
-```
+[https://zenonux.github.io/calendar-graph/](https://zenonux.github.io/calendar-graph/)
 
 ## 安装
 

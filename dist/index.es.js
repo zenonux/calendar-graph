@@ -252,13 +252,14 @@ class CanvasGraph {
   }
   render(data) {
     this._context.clearRect(0, 0, this._options.calendarWidth * this._ratio, this._options.calendarHeight * this._ratio);
-    let { monthTitleData, gridData, monthBoundaryData } = this._options;
+    let { monthTitleData, gridData, monthBoundaryData, todayBoundaryData } = this._options;
     if (data && data.length > 0) {
       gridData = Grid.mergeData(gridData, data);
     }
     this.renderMonthTitle(monthTitleData);
     this.renderGrid(gridData);
     this.renderMonthBoundary(monthBoundaryData);
+    this.renderTodayBoundary(todayBoundaryData);
     this._context.scale(this._ratio, this._ratio);
   }
   renderMonthTitle(monthTitleData) {
@@ -269,6 +270,17 @@ class CanvasGraph {
     monthTitleData.forEach((val) => {
       this._context.fillText(val.title, val.x, val.y);
     });
+  }
+  renderTodayBoundary(dots) {
+    this._context.setLineDash([]);
+    this._context.strokeStyle = this._options.borderColor;
+    this._context.lineWidth = this._options.space / 2;
+    this._context.beginPath();
+    dots.forEach((item) => {
+      this._context.lineTo(item.x, item.y);
+    });
+    this._context.closePath();
+    this._context.stroke();
   }
   renderMonthBoundary(monthBoundaryData) {
     this._context.strokeStyle = this._options.borderColor;
@@ -282,13 +294,41 @@ class CanvasGraph {
       });
     });
     this._context.stroke();
-    this._context.closePath();
   }
   renderGrid(gridData) {
     gridData.forEach((val) => {
       this._context.fillStyle = this._options.colorFunc(val.count || 0);
       this._context.fillRect(val.x, val.y, this._options.size, this._options.size);
     });
+  }
+}
+class TodayBoundary {
+  constructor(_grid, _opts) {
+    __publicField(this, "todayBoundaryData");
+    let todayOfYear = getDayOfYear(new Date());
+    let { x, y } = _grid.getCellPostionByDay(todayOfYear);
+    let topLeft = {
+      x: x - _opts.space / 2,
+      y: y - _opts.space / 2
+    };
+    let topRight = {
+      x: x + _opts.size + _opts.space / 2,
+      y: y - _opts.space / 2
+    };
+    let bottomLeft = {
+      x: x - _opts.space / 2,
+      y: y + _opts.size + _opts.space / 2
+    };
+    let bottomRight = {
+      x: x + _opts.size + _opts.space / 2,
+      y: y + _opts.size + _opts.space / 2
+    };
+    this.todayBoundaryData = [
+      topLeft,
+      topRight,
+      bottomRight,
+      bottomLeft
+    ];
   }
 }
 class CalendarGraph {
@@ -299,6 +339,7 @@ class CalendarGraph {
     __publicField(this, "_grid");
     __publicField(this, "_canvasGraph");
     __publicField(this, "_monthBoundary");
+    __publicField(this, "_todayBoundary");
     this._options = _options;
     this.init(_options);
   }
@@ -310,6 +351,7 @@ class CalendarGraph {
       gridData: this._grid.gridData,
       monthTitleData: this._monthTitle.monthTitleData,
       monthBoundaryData: this._monthBoundary.monthBoundaryData,
+      todayBoundaryData: this._todayBoundary.todayBoundaryData,
       size: this._options.size,
       space: this._options.space,
       font: this._options.font,
@@ -334,6 +376,10 @@ class CalendarGraph {
     this.canvasWidth = this._grid.width;
     this.canvasHeight = this._grid.height + options.titleHeight;
     this._monthBoundary = new MonthBoundary(this._grid, {
+      size: this._options.size,
+      space: this._options.space
+    });
+    this._todayBoundary = new TodayBoundary(this._grid, {
       size: this._options.size,
       space: this._options.space
     });

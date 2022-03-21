@@ -11,7 +11,8 @@ type CanvasGraphOptions = {
     font: string
     fontColor: string
     monthTitleData: MonthTitleItem[]
-    monthBoundaryData: MonthBoundaryItem[],
+    todayBoundaryData: GridItem[]
+    monthBoundaryData: MonthBoundaryItem[]
     gridData: GridItem[]
     calendarWidth: number
     calendarHeight: number
@@ -35,13 +36,14 @@ export class CanvasGraph {
 
     render(data?: DataItem[]) {
         this._context.clearRect(0, 0, this._options.calendarWidth * this._ratio, this._options.calendarHeight * this._ratio)
-        let { monthTitleData, gridData, monthBoundaryData } = this._options
+        let { monthTitleData, gridData, monthBoundaryData, todayBoundaryData } = this._options
         if (data && data.length > 0) {
             gridData = Grid.mergeData(gridData, data)
         }
         this.renderMonthTitle(monthTitleData)
         this.renderGrid(gridData)
         this.renderMonthBoundary(monthBoundaryData)
+        this.renderTodayBoundary(todayBoundaryData)
         this._context.scale(this._ratio, this._ratio);
     }
 
@@ -55,11 +57,25 @@ export class CanvasGraph {
         })
     }
 
+    renderTodayBoundary(dots: GridItem[]) {
+        this._context.setLineDash([])
+        this._context.strokeStyle = this._options.borderColor
+        this._context.lineWidth = this._options.space / 2
+        this._context.beginPath()
+        dots.forEach((item) => {
+            this._context.lineTo(item.x, item.y)
+        })
+        this._context.closePath()
+        this._context.stroke()
+    }
+
+
+
     renderMonthBoundary(monthBoundaryData: MonthBoundaryItem[]) {
         this._context.strokeStyle = this._options.borderColor
         this._context.lineWidth = this._options.space / 2
         this._context.beginPath()
-        this._context.setLineDash([this._options.space * 2,this._options.space])
+        this._context.setLineDash([this._options.space * 2, this._options.space])
         monthBoundaryData.forEach(val => {
             this._context.moveTo(val[0].x, val[0].y)
             val.forEach((item) => {
@@ -67,7 +83,6 @@ export class CanvasGraph {
             })
         })
         this._context.stroke()
-        this._context.closePath()
     }
 
     renderGrid(gridData: GridItem[]) {
@@ -76,5 +91,8 @@ export class CanvasGraph {
             this._context.fillRect(val.x, val.y, this._options.size, this._options.size)
         })
     }
+
+
+
 
 }

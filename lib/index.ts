@@ -2,6 +2,7 @@ import { DataItem, Grid, } from "./grid"
 import { MonthBoundary } from "./monthBoundary"
 import { MonthTitle } from "./monthTitle"
 import { CanvasGraph } from "./render"
+import { TodayBoundary } from "./todayBoundary"
 import { getFirstDayOfYear } from "./util"
 
 type CanvasGraphOptions = {
@@ -22,6 +23,7 @@ export class CalendarGraph {
   private _grid: Grid;
   private _canvasGraph: CanvasGraph;
   private _monthBoundary: MonthBoundary
+  private _todayBoundary: TodayBoundary
   constructor(private _options: CanvasGraphOptions) {
     this.init(_options)
   }
@@ -34,6 +36,7 @@ export class CalendarGraph {
       gridData: this._grid.gridData,
       monthTitleData: this._monthTitle.monthTitleData,
       monthBoundaryData: this._monthBoundary.monthBoundaryData,
+      todayBoundaryData: this._todayBoundary.todayBoundaryData,
       size: this._options.size,
       space: this._options.space,
       font: this._options.font,
@@ -59,6 +62,10 @@ export class CalendarGraph {
     this.canvasWidth = this._grid.width
     this.canvasHeight = this._grid.height + options.titleHeight
     this._monthBoundary = new MonthBoundary(this._grid, {
+      size: this._options.size,
+      space: this._options.space,
+    })
+    this._todayBoundary = new TodayBoundary(this._grid, {
       size: this._options.size,
       space: this._options.space,
     })

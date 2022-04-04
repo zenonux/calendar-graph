@@ -40,11 +40,11 @@ export class CanvasGraph {
         if (data && data.length > 0) {
             gridData = Grid.mergeData(gridData, data)
         }
+        this._context.scale(this._ratio, this._ratio);
         this.renderMonthTitle(monthTitleData)
         this.renderGrid(gridData)
         this.renderMonthBoundary(monthBoundaryData)
         this.renderTodayBoundary(todayBoundaryData)
-        this._context.scale(this._ratio, this._ratio);
     }
 
     renderMonthTitle(monthTitleData: MonthTitleItem[]) {

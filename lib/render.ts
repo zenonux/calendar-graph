@@ -21,6 +21,7 @@ type CanvasGraphOptions = {
 export class CanvasGraph {
     private _context: CanvasRenderingContext2D
     private _ratio: number
+    private _isScaled=false
     constructor(canvas: HTMLCanvasElement, private _options: CanvasGraphOptions) {
         this._context = canvas.getContext('2d')
         this._ratio = this.initRatio(_options.devicePixelRatio, this._context)
@@ -40,7 +41,10 @@ export class CanvasGraph {
         if (data && data.length > 0) {
             gridData = Grid.mergeData(gridData, data)
         }
-        this._context.scale(this._ratio, this._ratio);
+        if(!this._isScaled){
+            this._context.scale(this._ratio, this._ratio);
+            this._isScaled=true
+        }
         this.renderMonthTitle(monthTitleData)
         this.renderGrid(gridData)
         this.renderMonthBoundary(monthBoundaryData)

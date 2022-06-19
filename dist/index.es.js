@@ -199,19 +199,25 @@ class MonthBoundary {
 class MonthTitle {
   constructor(options) {
     __publicField(this, "monthTitleData");
-    this.init(options);
+    this.options = options;
+    this._init();
   }
-  init(options) {
+  _init() {
     this.monthTitleData = new Array(12).fill(null).map((_val, key) => {
-      let column = this.getMonthColumn(key, options.offsetCellCount);
-      return {
-        title: key + 1 + "\u6708",
-        x: column * options.size + column * options.space + options.space / 2,
-        y: options.titleHeight / 2
-      };
+      return this.getMonthTitleInfo(key);
     });
   }
-  getMonthColumn(month, offsetCellCount) {
+  getMonthTitleInfo(month) {
+    let { options } = this;
+    let column = this._getMonthColumn(month, options.offsetCellCount);
+    return {
+      title: month + 1 + "\u6708",
+      month,
+      x: column * options.size + column * options.space + options.space / 2,
+      y: options.titleHeight / 2
+    };
+  }
+  _getMonthColumn(month, offsetCellCount) {
     let firstDay = new Date(new Date().getFullYear(), month, 1);
     let day = getDayOfYear(firstDay);
     let weekday = firstDay.getDay();
@@ -333,26 +339,9 @@ class CalendarGraph {
     __publicField(this, "_monthBoundary");
     __publicField(this, "_todayBoundary");
     this._options = _options;
-    this.init(_options);
+    this._init(_options);
   }
-  setCanvas(canvas) {
-    this._canvasGraph = new CanvasGraph(canvas, {
-      devicePixelRatio: this._options.devicePixelRatio,
-      calendarWidth: this.canvasWidth,
-      calendarHeight: this.canvasHeight,
-      gridData: this._grid.gridData,
-      monthTitleData: this._monthTitle.monthTitleData,
-      monthBoundaryData: this._monthBoundary.monthBoundaryData,
-      todayBoundaryData: this._todayBoundary.todayBoundaryData,
-      size: this._options.size,
-      space: this._options.space,
-      font: this._options.font,
-      colorFunc: this._options.colorFunc,
-      fontColor: this._options.fontColor,
-      borderColor: this._options.borderColor
-    });
-  }
-  init(options) {
+  _init(options) {
     let offsetCellCount = this.getOffsetCellCount();
     this._monthTitle = new MonthTitle({
       offsetCellCount,
@@ -375,6 +364,26 @@ class CalendarGraph {
       size: this._options.size,
       space: this._options.space
     });
+  }
+  setCanvas(canvas) {
+    this._canvasGraph = new CanvasGraph(canvas, {
+      devicePixelRatio: this._options.devicePixelRatio,
+      calendarWidth: this.canvasWidth,
+      calendarHeight: this.canvasHeight,
+      gridData: this._grid.gridData,
+      monthTitleData: this._monthTitle.monthTitleData,
+      monthBoundaryData: this._monthBoundary.monthBoundaryData,
+      todayBoundaryData: this._todayBoundary.todayBoundaryData,
+      size: this._options.size,
+      space: this._options.space,
+      font: this._options.font,
+      colorFunc: this._options.colorFunc,
+      fontColor: this._options.fontColor,
+      borderColor: this._options.borderColor
+    });
+  }
+  getMonthTitleInfo(month) {
+    return this._monthTitle.getMonthTitleInfo(month);
   }
   getOffsetCellCount() {
     let offsetCellCount = 0;

@@ -1,9 +1,9 @@
-import { DataItem, Grid, } from "./grid"
-import { MonthBoundary } from "./monthBoundary"
-import { MonthTitle } from "./monthTitle"
-import { CanvasGraph } from "./render"
-import { TodayBoundary } from "./todayBoundary"
-import { getFirstDayOfYear } from "./util"
+import { DataItem, Grid } from './grid'
+import { MonthBoundary } from './monthBoundary'
+import { MonthTitle } from './monthTitle'
+import { CanvasGraph } from './render'
+import { TodayBoundary } from './todayBoundary'
+import { getFirstDayOfYear } from './util'
 
 type CanvasGraphOptions = {
   devicePixelRatio: number
@@ -19,40 +19,22 @@ type CanvasGraphOptions = {
 export class CalendarGraph {
   canvasWidth: number
   canvasHeight: number
-  private _monthTitle: MonthTitle;
-  private _grid: Grid;
-  private _canvasGraph: CanvasGraph;
+  private _monthTitle: MonthTitle
+  private _grid: Grid
+  private _canvasGraph: CanvasGraph
   private _monthBoundary: MonthBoundary
   private _todayBoundary: TodayBoundary
   constructor(private _options: CanvasGraphOptions) {
-    this.init(_options)
+    this._init(_options)
   }
 
-  setCanvas(canvas: HTMLCanvasElement) {
-    this._canvasGraph = new CanvasGraph(canvas, {
-      devicePixelRatio: this._options.devicePixelRatio,
-      calendarWidth: this.canvasWidth,
-      calendarHeight: this.canvasHeight,
-      gridData: this._grid.gridData,
-      monthTitleData: this._monthTitle.monthTitleData,
-      monthBoundaryData: this._monthBoundary.monthBoundaryData,
-      todayBoundaryData: this._todayBoundary.todayBoundaryData,
-      size: this._options.size,
-      space: this._options.space,
-      font: this._options.font,
-      colorFunc: this._options.colorFunc,
-      fontColor: this._options.fontColor,
-      borderColor: this._options.borderColor
-    })
-  }
-
-  init(options: CanvasGraphOptions) {
+  _init(options: CanvasGraphOptions) {
     let offsetCellCount = this.getOffsetCellCount()
     this._monthTitle = new MonthTitle({
       offsetCellCount: offsetCellCount,
       size: options.size,
       space: options.space,
-      titleHeight: options.titleHeight
+      titleHeight: options.titleHeight,
     })
     this._grid = new Grid(offsetCellCount, {
       offsetY: options.titleHeight,
@@ -70,6 +52,29 @@ export class CalendarGraph {
       space: this._options.space,
     })
   }
+
+  setCanvas(canvas: HTMLCanvasElement) {
+    this._canvasGraph = new CanvasGraph(canvas, {
+      devicePixelRatio: this._options.devicePixelRatio,
+      calendarWidth: this.canvasWidth,
+      calendarHeight: this.canvasHeight,
+      gridData: this._grid.gridData,
+      monthTitleData: this._monthTitle.monthTitleData,
+      monthBoundaryData: this._monthBoundary.monthBoundaryData,
+      todayBoundaryData: this._todayBoundary.todayBoundaryData,
+      size: this._options.size,
+      space: this._options.space,
+      font: this._options.font,
+      colorFunc: this._options.colorFunc,
+      fontColor: this._options.fontColor,
+      borderColor: this._options.borderColor,
+    })
+  }
+
+  getMonthTitleInfo(month: number) {
+    return this._monthTitle.getMonthTitleInfo(month)
+  }
+
   // 单元格从左到右，从上到下进行偏移, 确保每年的第一天和星期几对应
   private getOffsetCellCount() {
     let offsetCellCount = 0
@@ -86,8 +91,4 @@ export class CalendarGraph {
   render(data: DataItem[]) {
     this._canvasGraph.render(data)
   }
-
 }
-
-
-

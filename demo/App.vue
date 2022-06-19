@@ -27,6 +27,10 @@ onMounted(() => {
       return '#2196f3'
     },
   })
+
+  // 获取title信息
+  console.log(calendarGraph.getMonthTitleInfo(3))
+
   calendarGraph.setCanvas(
     document.getElementById('canvas') as HTMLCanvasElement
   )

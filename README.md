@@ -2,7 +2,7 @@
 
 移动端类似于 github 提交日历的效果，基于 canvas 实现，兼容小程序。
 
-## Online Demo
+## 在线 Demo
 
 [https://zenonux.github.io/calendar-graph/](https://zenonux.github.io/calendar-graph/)
 
@@ -38,7 +38,11 @@ const calendarGraph = new CalendarGraph({
     return '#2196f3'
   },
 })
-// 小程序canvas是异步获取
+
+// 获取title信息
+console.log(calendarGraph.getMonthTitleInfo(0))
+
+// 小程序canvas是异步获取的
 calendarGraph.setCanvas(document.getElementById('canvas') as HTMLCanvasElement)
 const data = [
   { date: '2022-2-10', count: 1 },
@@ -51,3 +55,8 @@ const data = [
 // 等待数据加载后重新渲染画布
 calendarGraph.render(data)
 ```
+
+
+## 更新日志(v1.5.0)
+- 新增typings
+- 增加getMonthTitleInfo方法

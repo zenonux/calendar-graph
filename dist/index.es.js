@@ -1,22 +1,5 @@
 var __defProp = Object.defineProperty;
-var __defProps = Object.defineProperties;
-var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b || (b = {}))
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
-var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
@@ -95,7 +78,10 @@ class Grid {
       return target;
     }, {});
     for (let i = 0; i < gridData.length; i++) {
-      gridData[i] = __spreadValues(__spreadValues({}, gridData[i]), dataTmp[i]);
+      gridData[i] = {
+        ...gridData[i],
+        ...dataTmp[i]
+      };
     }
     return gridData;
   }
@@ -173,12 +159,14 @@ class MonthBoundary {
           break;
         }
       }
-      let middleDotTop = __spreadProps(__spreadValues({}, dots[index]), {
+      let middleDotTop = {
+        ...dots[index],
         y: dots[index].y + this._opts.space / 2
-      });
-      let middleDotBottom = __spreadProps(__spreadValues({}, dots[index + 1]), {
+      };
+      let middleDotBottom = {
+        ...dots[index + 1],
         y: dots[index + 1].y - this._opts.space / 2
-      });
+      };
       middleDots = middleDotTop.x < middleDotBottom.x ? [middleDotTop, middleDotBottom] : [middleDotBottom, middleDotTop];
     }
     this._bottomBoundaryData.push({

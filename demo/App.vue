@@ -2,8 +2,8 @@
   <canvas id="canvas"></canvas>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { CalendarGraph } from '../lib'
+import { onMounted } from 'vue'
+import { CalendarGraph } from '../src'
 
 onMounted(() => {
   const calendarGraph = new CalendarGraph({
@@ -26,8 +26,10 @@ onMounted(() => {
       }
       return '#2196f3'
     },
-  });
-  calendarGraph.setCanvas(document.getElementById('canvas') as HTMLCanvasElement)
+  })
+  calendarGraph.setCanvas(
+    document.getElementById('canvas') as HTMLCanvasElement
+  )
   const data = [
     { date: '2022-2-10', count: 1 },
     { date: '2022-3-10', count: 1 },
@@ -38,7 +40,6 @@ onMounted(() => {
   ]
   calendarGraph.render(data)
 })
-
 </script>
 <style>
 html,
